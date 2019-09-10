@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Nunito);@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700&display=swap);@charset "UTF-8";
 
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
@@ -10641,6 +10641,49 @@ a.text-dark:focus {
   .table .thead-dark th {
     color: inherit;
     border-color: #dee2e6;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: "Roboto Slab", serif;
+}
+
+.app-body {
+  margin-top: 75px !important;
+}
+
+.img-avatar {
+  height: 35px !important;
+  width: 35px !important;
+}
+
+.navbar {
+  height: 75px !important;
+}
+
+.navbar img {
+  height: 100%;
+  width: 100%;
+}
+
+@media only screen and (max-width: 991.98px) {
+  .navbar {
+    height: 75px !important;
+  }
+
+  .navbar img {
+    height: 70%;
+    width: 100%;
+  }
+
+  .app-body {
+    margin-top: 0 !important;
   }
 }
 

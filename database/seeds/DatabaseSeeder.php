@@ -1,9 +1,9 @@
 <?php
 
-use App\Comment;
-use App\Post;
 use App\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,17 +14,49 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(PostSeeder::class);
-        $this->call(TagSeeder::class);
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        Auth::loginUsingId(User::first()->id);
-        $post = Post::first();
-        $post->tags()->sync([1, 2]);
+        $permissions = [
+            'backoffice access',
 
-        Comment::create([
-            'user_id' => Auth::id(),
-            'post_id' => $post->id,
-            'body' => 'This is a comment',
+            // User permissions
+            'add user',
+            'list user',
+            'edit user',
+            'destroy user',
+            'assign permission',
+
+            // Permissions
+            'add permission',
+            'list permission',
+            'destroy permission',
+            'edit permission'
+
+        ];
+        // create permissions
+        foreach ($permissions as $permission) {
+            Permission::create([
+                'name' => $permission
+            ]);
+        }
+
+        // create roles and assign created permissions
+
+        $role = Role::create(['name' => 'super-admin']);
+        $role->givePermissionTo(Permission::all());
+
+        $user_admin = User::create([
+                            'name' => 'Admin',
+                            'email' => 'administrator@admin.com',
+                            'password' => bcrypt('admin123'),
+                        ]);
+        $user_normal = User::create([
+            'name' => 'testing',
+            'email' => 'teste@admin.com',
+            'password' => bcrypt('admin123'),
         ]);
+        $user_normal->givePermissionTo('backoffice access','list permission');
+        // Assign the role to the admin user
+        $user_admin->assignRole($role);
     }
 }

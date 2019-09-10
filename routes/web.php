@@ -11,10 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use Illuminate\Support\Facades\Route;
 
+Route::group(['prefix' => 'backoffice', 'middleware' => ['auth', 'checkIfUserHasBOAccess']], function () {
+    Route::get('/', function () {
+        return view('backoffice.index');
+    });
+    Route::resource('permission', 'backoffice\PermissionController');
+    Route::resource('user', 'backoffice\UserController');
+});
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
