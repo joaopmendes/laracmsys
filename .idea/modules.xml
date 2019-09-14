@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/LaraCmSys.iml" filepath="$PROJECT_DIR$/.idea/LaraCmSys.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../laracmsys-package/.idea/laracmsys-package.iml" filepath="$PROJECT_DIR$/../laracmsys-package/.idea/laracmsys-package.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/laracmsys.iml" filepath="$PROJECT_DIR$/.idea/laracmsys.iml" />
     </modules>
   </component>
 </project>

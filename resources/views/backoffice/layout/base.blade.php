@@ -62,7 +62,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img class="img-avatar" src="{{asset('storage/avatares/' . \Auth::user()->avatar)}}">
+                    <img class="img-avatar" src="{{asset( \Auth::user()->avatar == "defaultuser.jpg" ? "img/avatars/" . \Auth::user()->avatar : 'storage/avatares/' . \Auth::user()->avatar)}}">
                     <span>{{\Auth::user()->name}}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
