@@ -27,6 +27,7 @@
                 </button>
             </div>
             <hr>
+            <small class="text-muted text-center w-100 d-block mb-2">Click the images to return the link</small>
             @if(Session::has('status-error'))
                 <div class="alert alert-danger alert-dismissible ">
                     {!! session('status-error') !!}
@@ -40,20 +41,11 @@
                 </div>
             @endif
             <div class="row">
+                <div class="image-container-grid" id="image-container-grid">
 
-                <table class="table table-striped" id="image_table">
-                    <thead class="thead-default">
-                    <tr>
-                        <th>File Id</th>
-                        <th>File Name</th>
-                        <th>File Preview</th>
-                        <th style="width: auto">Options</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                </div>
             </div>
+
         </div>
 
         <!-- Modal -->
