@@ -1,5 +1,7 @@
 <?php
 
+use App\Post;
+use App\Tag;
 use App\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -30,7 +32,25 @@ class DatabaseSeeder extends Seeder
             'add permission',
             'list permission',
             'destroy permission',
-            'edit permission'
+            'edit permission',
+
+
+            // Tags
+            'add tag',
+            'list tag',
+            'destroy tag',
+            'edit tag',
+
+            // Post
+            'add post',
+            'list post',
+            'destroy post',
+            'edit post',
+
+            'add file',
+            'list file',
+            'destroy file',
+            'edit file',
 
         ];
         // create permissions
@@ -40,23 +60,20 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // create roles and assign created permissions
-
-        $role = Role::create(['name' => 'super-admin']);
-        $role->givePermissionTo(Permission::all());
-
         $user_admin = User::create([
-                            'name' => 'Admin',
-                            'email' => 'administrator@admin.com',
-                            'password' => bcrypt('admin123'),
-                        ]);
+            'name' => 'Admin',
+            'email' => 'administrator@admin.com',
+            'password' => bcrypt('admin123'),
+        ]);
+        $user_admin->syncPermissions(Permission::all()->pluck('name'));
         $user_normal = User::create([
             'name' => 'testing',
             'email' => 'teste@admin.com',
             'password' => bcrypt('admin123'),
         ]);
-        $user_normal->givePermissionTo('backoffice access','list permission');
-        // Assign the role to the admin user
-        $user_admin->assignRole($role);
+        $user_normal->syncPermissions("backoffice access","add user");
+        $this->call(PostSeeder::class);
+        $this->call(TagSeeder::class);
+        Post::first()->tags()->sync(Tag::all()->pluck('id'));
     }
 }

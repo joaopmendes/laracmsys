@@ -13,7 +13,11 @@
         <div class="col-md-8 offset-2 mt-5">
             <div class="row">
                 <h3 class="text-center text-muted w-100">
-                    Create Permission
+                    @if(isset($permission))
+                        Edit Permission
+                    @else
+                        Create Permission
+                    @endif
                 </h3>
             </div>
             <hr>
@@ -71,8 +75,8 @@
                             @endif
                         </div>
                         <div class="form-group float-right">
-                            <a href="{{route('permission.index')}}" class="btn btn-outline-info">Go Back</a>
-                            {!! Form::submit('Submit', ['class' => 'btn btn-outline-success']) !!}
+                            <a href="{{route('permission.index')}}" class="btn btn-sm btn-outline-info">Go Back</a>
+                            {!! Form::submit('Submit', ['class' => 'btn btn-sm btn-outline-success']) !!}
                         </div>
 
                     {!! Form::close() !!}

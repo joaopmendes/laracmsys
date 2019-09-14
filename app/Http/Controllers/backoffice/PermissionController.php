@@ -8,17 +8,7 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function __construct()
-    {
-        $this->middleware('checkPermissions:permission');
 
-
-    }
     public function index()
     {
         $permissions = Permission::all();
@@ -38,8 +28,9 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
@@ -52,7 +43,7 @@ class PermissionController extends Controller
             'name' => $request->input('name'),
             'guard_name' => $request->input('guard_name'),
         ]);
-        $request->session()->flash('status', 'The Permission was successfully Created');
+        $request->session()->flash('status-success', 'The Permission was successfully Created');
         return redirect()->route('permission.edit', $permission->id);
 
     }
@@ -90,7 +81,7 @@ class PermissionController extends Controller
             'name' => $request->input('name'),
             'guard_name' => $request->input('guard_name'),
         ]);
-        $request->session()->flash('status', 'The Permission was successfully Updated');
+        $request->session()->flash('status-success', 'The Permission was successfully Updated');
         return redirect()->route('permission.edit', $permission->id);
     }
 

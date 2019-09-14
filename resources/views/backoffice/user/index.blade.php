@@ -37,7 +37,7 @@
                         <th>User Id</th>
                         <th>User Name</th>
                         <th>User E-mail</th>
-                        <th style="width: 150px">Options</th>
+                        <th style="width: auto">Options</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -49,11 +49,11 @@
                                 <td>{{$user->email}}</td>
                                 <td>
                                     @can('edit user')
-                                        <a href="{{route('user.edit', $user->id)}}" class="btn btn-outline-warning">Edit</a>
+                                        <a href="{{route('user.edit', $user->id)}}" class="btn btn-sm btn-outline-warning">Edit</a>
                                     @endcan
                                     @can('destroy user')
                                         {!! Form::open(['route' => ['user.destroy', $user->id], 'method' => 'delete', 'class' => ['d-inline']]) !!}
-                                            {!! Form::submit('Delete', ['class' => 'btn btn-outline-danger']) !!}
+                                            {!! Form::submit('Delete', ['class' => 'btn btn-sm btn-outline-danger']) !!}
                                         {!! Form::close() !!}
                                     @endcan
                                 </td>

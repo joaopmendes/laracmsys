@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="laracmsys@localhost" uuid="1fa3be02-9a4f-4d8d-87ff-6a86d5d3cb88">
+    <data-source source="LOCAL" name="personalblog@localhost" uuid="1fa3be02-9a4f-4d8d-87ff-6a86d5d3cb88">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/laracmsys</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/personalblog</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="CONVERT_TO_NULL" />

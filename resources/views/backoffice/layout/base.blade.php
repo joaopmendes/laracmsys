@@ -1,22 +1,15 @@
 <!DOCTYPE html>
-<!--
-* CoreUI - Free Bootstrap Admin Template
-* @version v2.1.15
-* @link https://coreui.io
-* Copyright (c) 2018 creativeLabs Łukasz Holeczek
-* Licensed under MIT (https://coreui.io/license)
--->
-
 <html lang="en">
-
 <head>
     <base href="./">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
-    <meta name="author" content="Łukasz Holeczek">
-    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <meta name="description" content="Blog CMS System">
+    <meta name="author" content="joaopmendes">
+    <meta name="csrf_token" content="{{csrf_token()}}">
+    <meta name="APP_URL" content="{{env('APP_URL')}}">
+    <meta name="keyword" content="Bootstrap,Admin,CMS,Blog,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>Backoffice</title>
     <!-- Icons-->
     <link rel="icon" type="image/ico" href="./img/favicon.ico" sizes="any" />
@@ -29,8 +22,20 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('vendors/pace-progress/css/pace.min.css') }}" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics-->
-    @yield('css')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
 
+    @yield('css')
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.9/css/mdb.min.css" rel="stylesheet">
+
+    <style>
+        #sidebar li .active, #sidebar a:hover {
+            background: #247394  !important;
+        }
+    </style>
 </head>
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
@@ -47,13 +52,10 @@
       </button>
         <ul class="nav navbar-nav d-md-down-none">
             <li class="nav-item px-3">
-                <a class="nav-link" href="#">Dashboard</a>
+                <a class="nav-link" href="{{ route('backoffice.index') }}">Dashboard</a>
             </li>
             <li class="nav-item px-3">
-                <a class="nav-link" href="#">Users</a>
-            </li>
-            <li class="nav-item px-3">
-                <a class="nav-link" href="#">Settings</a>
+                <a class="nav-link" href="{{ route('user.index') }}">Users</a>
             </li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
@@ -86,8 +88,8 @@
       </button>
     </header>
     <div class="app-body">
-        <div class="sidebar">
-            <nav class="sidebar-nav">
+        <div class="sidebar" id="sidebar">
+            <li class="sidebar-nav">
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link" href="index.html">
@@ -95,6 +97,7 @@
                         </a>
                     </li>
                     <li class="nav-title">Users & Permissions</li>
+                    @canany(["add user", "list user"])
                     <li class="nav-item">
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#">
@@ -114,6 +117,8 @@
                                 @endcan
                             </ul>
                         </li>
+                        @endcanany
+                        @canany(["add permission", "list permission"])
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#">
                                 <i class="nav-icon icon-puzzle"></i> Permission</a>
@@ -132,22 +137,63 @@
                                 @endcan
                             </ul>
                         </li>
-                    </li>
+                        @endcanany
 
-                    <li class="nav-title">Content Management</li>
+                        </li>
+
+                    <li class="nav-title">Blog Management</li>
+                        @canany(['add tag', 'edit tag'])
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#">
-                                <i class="nav-icon icon-puzzle"></i> Base</a>
+                                <i class="nav-icon icon-puzzle"></i> Tags</a>
                             <ul class="nav-dropdown-items">
+                                @can('add tag')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="base/breadcrumb.html">
-                                        <i class="nav-icon icon-puzzle"></i> Breadcrumb</a>
+                                    <a class="nav-link" href="{{route('tag.create')}}">
+                                        <i class="nav-icon icon-puzzle"></i> Create Tag</a>
                                 </li>
+                                @endcan
+                                @can("list tag")
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{route('tag.index')}}">
+                                        <i class="nav-icon icon-puzzle"></i> List Tags</a>
+                                </li>
+                                @endcan
                             </ul>
                         </li>
+                        @endcanany
+
+                        @canany(['add post', 'edit post'])
+                            <li class="nav-item nav-dropdown">
+                                <a class="nav-link nav-dropdown-toggle" href="#">
+                                    <i class="nav-icon icon-puzzle"></i> Posts</a>
+                                <ul class="nav-dropdown-items">
+                                    @can('add post')
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{route('post.create')}}">
+                                                <i class="nav-icon icon-puzzle"></i> Create Post</a>
+                                        </li>
+                                    @endcan
+                                    @can("list post")
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{route('post.index')}}">
+                                                <i class="nav-icon icon-puzzle"></i> List Post</a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcanany
+                        @canany(['add file', 'edit file'])
+                            <li class="nav-title">Multimedia</li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('file.index') }}">
+                                    <i class="nav-icon icon-puzzle"></i> Multimedia</a>
+                                </ul>
+                            </li>
+                        @endcanany
+
                 </ul>
             </nav>
-            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
         </div>
         <main class="main">
 
@@ -161,13 +207,8 @@
 
     </div>
     <footer class="app-footer">
-        <div>
-            <a href="https://github.com/joaopmendes/LaraCmSys">CoreUI</a>
-            <span>&copy; 2019 joaopmendes.</span>
-        </div>
-        <div class="ml-auto">
-            <span>Powered by</span>
-            <a href="https://coreui.io">CoreUI</a>
+        <div class="w-100">
+            <span class="text-center w-100 d-block">&copy; 2019 joaopmendes.</span>
         </div>
     </footer>
     <!-- CoreUI and necessary plugins-->
@@ -178,11 +219,20 @@
     <script src="{{ asset('vendors/perfect-scrollbar/js/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('vendors/@coreui/coreui/js/coreui.min.js') }}"></script>
     <!-- Plugins and scripts required by this view-->
-    <script src="{{ asset('vendors/chart.js/js/Chart.min.js') }}"></script>
     <script src="{{ asset('vendors/@coreui/coreui-plugin-chartjs-custom-tooltips/js/custom-tooltips.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    @yield('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
 
+    @yield('js')
+    <!-- Bootstrap tooltips -->
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.9/js/mdb.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 
 </html>

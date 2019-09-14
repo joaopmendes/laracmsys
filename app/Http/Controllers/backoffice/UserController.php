@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
@@ -20,6 +21,7 @@ class UserController extends Controller
     {
         $this->middleware('checkPermissions:user,true');
     }
+
     public function index()
     {
         $users = User::all();
@@ -55,13 +57,13 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-           'name' => $request->input('name'),
-           'email' => $request->input('email'),
-           'password' => bcrypt($request->input('password')),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
         ]);
-        if($request->avatar){
-            if(is_file(public_path('storage/avatares/'. $user->avatar)) && $user->avatar !== 'defaultuser.jpg'){
-                unlink(public_path('storage/avatares/'. $user->avatar));
+        if ($request->avatar) {
+            if (is_file(public_path('storage/avatares/' . $user->avatar)) && $user->avatar !== 'defaultuser.jpg') {
+                unlink(public_path('storage/avatares/' . $user->avatar));
             }
             $imageName = time() . '_' . $request->avatar->getClientOriginalName();
             $request->avatar->move(public_path('storage/avatares'), $imageName);
@@ -69,24 +71,27 @@ class UserController extends Controller
             $user->save();
         }
 
+        if ($user->hasPermissionTo('assign permission') && $user->id != 1) {
+            $user->syncPermissions([$request->input("permissions")]);
+        }
         $request->session()->flash('status-success', 'The User was created successfully');
         return redirect()->route('user.edit', $user->id);
 
     }
 
 
-
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $user = User::findOrFail($id);
         $permissions = Permission::all();
-        return view('backoffice.user.create_edt', compact('permissions', 'user'));
+        $user_permissions = $user->permissions->pluck('name');
+        return view('backoffice.user.create_edt', compact('permissions', 'user', 'user_permissions'));
     }
 
     /**
@@ -107,22 +112,26 @@ class UserController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
         $user = User::findOrFail($id);
-        if($request->input('password')){
+        if ($request->input('password')) {
             $user->update([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
             ]);
-        }else{
+        } else {
             $user->update([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
-                'password' => bcrypt($request->input('password')),
             ]);
         }
-        if($request->avatar){
-            if(is_file(public_path('storage/avatares/'. $user->avatar)) && $user->avatar !== 'defaultuser.jpg') {
-                unlink(public_path('storage/avatares/'. $user->avatar));
+        // Permissions
+        if ($user->hasPermissionTo('assign permission') && $user->id != 1) {
+            $user->syncPermissions([$request->input("permissions")]);
+        }
+
+        if ($request->avatar) {
+            if (is_file(public_path('storage/avatares/' . $user->avatar)) && $user->avatar !== 'defaultuser.jpg') {
+                unlink(public_path('storage/avatares/' . $user->avatar));
             }
             $imageName = time() . '_' . $request->avatar->getClientOriginalName();
             $request->avatar->move(public_path('storage/avatares'), $imageName);
@@ -144,9 +153,9 @@ class UserController extends Controller
     public function destroy(Request $req, $id)
     {
         $user = User::findOrFail($id);
-        if($user->id === 1){
+        if ($user->id === 1) {
             $req->session()->flash('status-error', "The user {$user->name} cannot be deleted.");
-        }else{
+        } else {
             $user->delete();
             $req->session()->flash('status-success', "The user {$user->name} was successfully deleted.");
         }

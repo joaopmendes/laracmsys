@@ -1,11 +1,13 @@
 @extends('backoffice.layout.base')
 
-@section('css')
 
-@endsection
 
 @section('js')
-
+    <script>
+        $("#permissions").select2({
+            width:"100%",
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -13,7 +15,11 @@
         <div class="col-md-8 offset-2 mt-5">
             <div class="row">
                 <h3 class="text-center text-muted w-100">
-                    Create User
+                    @if(isset($user))
+                        Edit User
+                    @else
+                        Create User
+                    @endif
                 </h3>
             </div>
             <hr>
@@ -104,33 +110,34 @@
                         </div>
                         @can('assign permission')
                             <div class="row">
-                            <div class="col-3">
-                                @foreach ($permissions as $permission)
-                                        {!! Form::checkbox($permission->name, $permission->id); !!}
-                                        {{$permission->name}}
-                                        @if (($loop->index + 1) % 3 === 0)
-                                            </div>
-                                            <div class="col-3">
-
-                                        @endif<br>
-                                @endforeach
-                            </div>
+                                <div class="col-12">
+                                    <label for="permissions">Permissions</label>
+                                    <select name="permissions[]" id="permissions" multiple>
+                                        @foreach ($permissions as $permission)
+                                            <option value="{{$permission->name}}" @if (isset($user->permissions) && $user_permissions->contains($permission->name))
+                                                selected
+                                            @endif>{{$permission->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         @endcan
                         <!-- End confirm Password -->
-                        <div class="form-group">
-                            {!! Form::label('avatar', 'Choose your avatar', ['class' => 'control-label']) !!}
-                            <span class="text-muted">Current: {{$user->avatar ?? null}}</span><br>
-                            {!! Form::file('avatar', []) !!}
-                            @if ($errors->has('avatar'))
-                                <div class="invalid-feedback">
-                                    {{$errors->first('avatar')}}
+                        <div class="form-group mt-3">
+                            <label for="avatar">User Avatar</label>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
                                 </div>
-                            @endif
-                        </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input {{ $errors->has('avatar') ? 'is-invalid' : null }}" name="avatar" id="avatar"
+                                           aria-describedby="avatar">
+                                    {!! Form::label('avatar', $user->avatar ?? 'Choose the banner image' , ['class' =>[ 'custom-file-label' ]]) !!}
+                                </div>
+                            </div>
                         <div class="form-group float-right">
-                            <a href="{{route('user.index')}}" class="btn btn-outline-info">Go Back</a>
-                            {!! Form::submit('Submit', ['class' => 'btn btn-outline-success']) !!}
+                            <a href="{{route('user.index')}}" class="btn btn-sm btn-outline-info">Go Back</a>
+                            {!! Form::submit('Submit', ['class' => 'btn btn-sm btn-outline-success']) !!}
                         </div>
 
                     {!! Form::close() !!}

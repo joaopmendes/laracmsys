@@ -13,7 +13,7 @@
         <div class="col-md-8 offset-2 mt-5">
             <div class="row">
                 <h3 class="text-center text-muted w-100">
-                    Show Permissions
+                    Show Posts
                 </h3>
             </div>
             <hr>
@@ -34,29 +34,29 @@
                 <table class="table table-striped ">
                     <thead class="thead-default">
                     <tr>
-                        <th>Permission Id</th>
-                        <th>Permission Name</th>
+                        <th>Post Id</th>
+                        <th>Post Subject</th>
                         <th style="width: auto">Options</th>
                     </tr>
                     </thead>
                     <tbody>
 
-                        @foreach ($permissions as $permission)
-                            <tr>
-                                <td scope="row">{{$permission->id}}</td>
-                                <td>{{$permission->name}}</td>
-                                <td>
-                                    @can('edit permission')
-                                        <a href="{{route('permission.edit', $permission->id)}}" class="btn btn-sm btn-outline-warning">Edit</a>
-                                    @endcan
-                                    @can('destroy permission')
-                                        {!! Form::open(['route' => ['permission.destroy', $permission->id], 'method' => 'delete', 'class' => ['d-inline']]) !!}
-                                            {!! Form::submit('Delete', ['class' => 'btn btn-sm btn-outline-danger']) !!}
-                                        {!! Form::close() !!}
-                                    @endcan
-                                </td>
-                            </tr>
-                        @endforeach
+                    @foreach ($object_list as $object)
+                        <tr>
+                            <td scope="row">{{$object->id}}</td>
+                            <td>{{$object->subject}}</td>
+                            <td>
+                                @can('edit post')
+                                    <a href="{{route('post.edit', $object->id)}}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                @endcan
+                                @can('destroy post')
+                                    {!! Form::open(['route' => ['post.destroy', $object->id], 'method' => 'delete', 'class' => ['d-inline']]) !!}
+                                    {!! Form::submit('Delete', ['class' => 'btn btn-sm btn-outline-danger']) !!}
+                                    {!! Form::close() !!}
+                                @endcan
+                            </td>
+                        </tr>
+                    @endforeach
 
                     </tbody>
                 </table>
