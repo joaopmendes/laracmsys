@@ -187,16 +187,38 @@
                                 </ul>
                             </li>
                         @endcanany
-                        @canany(['add file', 'edit file'])
-                            <li class="nav-title">Multimedia</li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('file.index') }}">
-                                    <i class="nav-icon icon-puzzle"></i> Multimedia</a>
-                                </ul>
-                            </li>
+                            <li class="nav-title">Others</li>
+                            @canany(['add file', 'edit file'])
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('file.index') }}">
+                                        <i class="nav-icon icon-puzzle"></i> Multimedia</a>
+                                </li>
+                            @endcanany
+                        @canany(['add language', 'edit language'])
+                        <li class="nav-item nav-dropdown">
+                            <a class="nav-link nav-dropdown-toggle" href="#">
+                                <i class="nav-icon icon-puzzle"></i> Languages</a>
+                            <ul class="nav-dropdown-items">
+                                @can('add language')
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{route('language.create')}}">
+                                            <i class="nav-icon icon-puzzle"></i> Create Language</a>
+                                    </li>
+                                @endcan
+                                @can("list post")
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{route('language.index')}}">
+                                            <i class="nav-icon icon-puzzle"></i> List Languages</a>
+                                    </li>
+                                @endcan
+                            </ul>
+
                         @endcanany
 
-                </ul>
+                            </ul>
+                        </li>
+                    </ul>
+
             </nav>
         </div>
         <main class="main">

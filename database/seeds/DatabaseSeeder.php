@@ -1,5 +1,6 @@
 <?php
 
+use App\Language;
 use App\Post;
 use App\Tag;
 use App\User;
@@ -16,6 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // USERS AND PERMISSIONS
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = [
@@ -46,34 +48,43 @@ class DatabaseSeeder extends Seeder
             'list post',
             'destroy post',
             'edit post',
+            'edit_status post',
 
             'add file',
             'list file',
             'destroy file',
             'edit file',
 
+            'add language',
+            'list language',
+            'destroy language',
+            'edit language',
+            'edit_status language',
         ];
-        // create permissions
         foreach ($permissions as $permission) {
             Permission::create([
                 'name' => $permission
             ]);
         }
 
-        $user_admin = User::create([
+        User::create([
             'name' => 'Admin',
             'email' => 'administrator@admin.com',
             'password' => bcrypt('admin123'),
-        ]);
-        $user_admin->syncPermissions(Permission::all()->pluck('name'));
-        $user_normal = User::create([
+        ])->syncPermissions(Permission::all()->pluck('name'));;
+        User::create([
             'name' => 'testing',
             'email' => 'teste@admin.com',
             'password' => bcrypt('admin123'),
+        ])->syncPermissions("backoffice access","add user");
+        // -----------------------------
+
+        // LANGUAGES
+        Language::create([
+            'slug' => 'EN',
+            'name' => 'English',
         ]);
-        $user_normal->syncPermissions("backoffice access","add user");
-        $this->call(PostSeeder::class);
-        $this->call(TagSeeder::class);
-        Post::first()->tags()->sync(Tag::all()->pluck('id'));
+        // -------------
+
     }
 }
