@@ -35,6 +35,10 @@
         #sidebar li .active, #sidebar a:hover {
             background: #247394  !important;
         }
+        #sidebar{
+            font-size: 13px;
+        }
+
     </style>
 </head>
 
