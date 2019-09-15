@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'backoffice', 'middleware' => ['auth', 'checkIfUserHasBOAccess']], function () {
@@ -22,6 +24,19 @@ Route::group(['prefix' => 'backoffice', 'middleware' => ['auth', 'checkIfUserHas
     Route::resource('tag', 'backoffice\TagController');
     Route::resource('post', 'backoffice\PostController');
     Route::resource('file', 'backoffice\FileController');
+    Route::resource('language', 'backoffice\LanguageController');
+
+
+
+    Route::get('/updateStatus/{id}/{table}/{column}/{prevStatus}/{permission}',
+        function ($id, $table, $column, $prevStatus, $permission) {
+            if (Auth::user()->hasPermissionTo($permission)){
+                DB::table($table)->where($column, $id)->update(['STATUS' => !$prevStatus]);
+                return redirect()->back();
+            }
+        abort(403);
+
+    })->name('status.update');
 });
 Auth::routes();
 

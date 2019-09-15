@@ -8,7 +8,11 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkPermissions:permission');
 
+    }
     public function index()
     {
         $permissions = Permission::all();

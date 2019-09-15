@@ -28,6 +28,19 @@ h1, h2, h3, h4, h5, h6, p {
         width: 100%;
     }
 }
+
+
+.custom-control-input:checked~.custom-control-label::before{
+    background-color: #36b9cc;
+    border-color: #36b9cc;
+}
+
+.custom-file-label{
+    right: .75rem;
+    left: .75rem;
+}
+
+
 @media only screen and (max-width: 991.98px) {
     .navbar {
         height: 75px !important;
