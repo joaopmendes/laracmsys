@@ -44,7 +44,7 @@
                     @foreach ($tags as $tag)
                         <tr>
                             <td scope="row">{{$tag->id}}</td>
-                            <td>{{$tag->name}}</td>
+                            <td>{{$tag->traduction->first()->pivot->name}}</td>
                             <td>
                                 @can('edit permission')
                                     <a href="{{route('tag.edit', $tag->id)}}" class="btn btn-sm btn-outline-warning">Edit</a>

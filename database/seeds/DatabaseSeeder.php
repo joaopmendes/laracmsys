@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             'list language',
             'destroy language',
             'edit language',
-            'edit_status language',
+            'edit_st    atus language',
         ];
         foreach ($permissions as $permission) {
             Permission::create([

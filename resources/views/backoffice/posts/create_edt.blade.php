@@ -10,11 +10,21 @@
 
         CKEDITOR.disableAutoInline = true;
         CKEDITOR.inline('editor1');
-
         $("#tags").select2({
             width: "100%",
         });
-        // Animations initialization
+        @foreach ($languages as $index => $lang)
+            @if($errors->any() && $errors->first("subject_{$lang->slug}"))
+                $('#{{$lang->slug}}').tab('show')
+                @foreach ($languages as $index => $lang)
+                    @if($errors->any() && $errors->first("body_{$lang->slug}"))
+                        $('#{{$lang->slug}}').tab('show')
+                        @break
+                    @endif
+                @endforeach
+                @break
+            @endif
+        @endforeach
 
     </script>
 @endsection
@@ -52,78 +62,44 @@
                     @else
                         {!! Form::open(['route' => 'post.store', 'method' => 'post', 'files' => true]) !!}
                     @endif
-                    <div class="form-group">
-                        {!! Form::label('subject','Subject',['class' => 'control-label']) !!}
-                        {!! Form::text('subject',
-                                null,
-                                ['class' =>[
-                                    'form-control',
-                                    $errors->first('subject') ? 'is-invalid' : ''
-                                ]])
-                        !!}
-                        @if ($errors->has('subject'))
-                            <div class="invalid-feedback">
-                                {{$errors->first('subject')}}
-                            </div>
-                        @endif
-                    </div>
-                    <div class="form-group">
-                        <label for="banner_image">Banner Image</label>
-                        <div class="input-group ">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                            </div>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input {{ $errors->has('banner_image') ? 'is-invalid' : null }}" name="banner_image" id="banner_image"
-                                       aria-describedby="banner_image">
-                                {!! Form::label('banner_image', $object->banner_image ?? 'Choose the banner image' , ['class' =>[ 'custom-file-label' ]]) !!}
-                            </div>
-                        </div>
-                        @if ($errors->has('banner_image'))
-                            <div class="invalid-feedback">
-                                {{$errors->first('banner_image')}}
-                            </div>
-                        @endif
-                    </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <label for="tags">Tags</label>
-                            <select name="tags[]" id="tags" multiple>
-                                @foreach ($tags as $tag)
-                                    <option value="{{$tag->id}}"
-                                            @if (isset($object->tags) &&
-                                                \DB::table("post_tag")
-                                                    ->where(
-                                                        ['post_id' => $object->id,
-                                                         'tag_id' => $tag->id
-                                                        ])->exists()
-                                                )
-                                            selected
-                                        @endif>{{$tag->name}}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                        <div class="mt-3">
-                            <label>Default Opitons</label><br>
-                            <div class="custom-control custom-checkbox ">
-                                <input type="checkbox" @if(isset($object->highlighted) && $object->highlighted == 1) checked @endif name="highlighted" class="custom-control-input" id="highlighted">
-                                <label class="custom-control-label" for="highlighted">Highlighted (first page)</label>
-                            </div>
-                            <div class="custom-control custom-checkbox ">
-                                <input type="checkbox" @if(!isset($object->status)) checked @endif @if(isset($object->status) && $object->status == 1) checked @endif name="status" class="custom-control-input" id="status">
-                                <label class="custom-control-label"  for="status">Status (Active or not)</label>
-                            </div>
-                        </div>
 
-                    <div class="form-group">
-                        {!! Form::label('body','Post Body',['class' => 'control-label mt-3 ']) !!}
-                        <textarea id="editor1" name="body" class="is-invalid" contenteditable="true"
-                                  style="border: 1px solid #4b565b; padding: 10px">
-                            @if(isset($object->body)) {{$object->body}} @else
-                                <div class="container">
+                    ----------------------------
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        @foreach ($languages as $i => $language)
+                            <li class="nav-item" style="width:{{$tabsAdjust}}%;">
+                                <a class="nav-link @if ($i == 0) active @endif" id="{{$language->slug}}"
+                                   style="color:black;" data-toggle="tab" href="#section-{{$language->slug}}" role="tab"
+                                   aria-controls="{{$language->slug}}"
+                                   aria-selected="@if ($i == 0) true @else false @endif">{{$language->name}}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        @foreach ($languages as $index => $language)
+                            <div value="{{ $language->slug }}" class="tab-pane fade @if ($index == 0)show active @endif"
+                                 role="tabpanel" aria-labelledby="{{$language->slug}}">
+                                <div class="form-group">
+                                    {!! Form::label("subject_{$language->slug}","Subject {$language->slug}",['class' => 'control-label']) !!}
+                                    {!! Form::text("subject_{$language->slug}",
+                                            null,
+                                            ['class' =>[
+                                                'form-control',
+                                                $errors->first("subject_{$language->slug}") ? 'is-invalid' : ''
+                                            ]])
+                                    !!}
+                                    @if ($errors->has("subject_{$language->slug}"))
+                                        <div class="invalid-feedback">
+                                            {{$errors->first("subject_{$language->slug}")}}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    {!! Form::label("body_{$language->slug}","Post Body {$language->slug}",['class' => 'control-label mt-3 ']) !!}
+                                    <textarea id="editor1" name="{{"body_{$language->slug}"}}" class="is-invalid" contenteditable="true"
+                                              style="border: 1px solid #4b565b; padding: 10px">
+                            @if(isset($object->traduction->where('language_id', $language->id)->pivot->body) {{$object->body}} @else
+                                            <div class="container">
 
                                     <!--Section: Post-->
                                     <section class="mt-4">
@@ -229,7 +205,7 @@
                                                                  alt="Generic placeholder image"
                                                                  style="width: 100px;">
                                                             <div
-                                                                class="media-body text-center text-md-left ml-md-3 ml-0">
+                                                                    class="media-body text-center text-md-left ml-md-3 ml-0">
                                                                 <h5 class="mt-0 font-weight-bold">Caroline Horwitz
                                                                 </h5>
                                                                 At vero eos et accusamus et iusto odio dignissimos ducimus
@@ -250,10 +226,64 @@
                                         </div>
                                     </section>
                                 </div>
-                            @endif
+                                        @endif
                         </textarea>
-                    </div>
+                                </div>
 
+                            </div>
+                        @endforeach
+                    </div>
+                    ----------------------------
+
+                    <div class="form-group">
+                        <label for="banner_image">Banner Image</label>
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input {{ $errors->has('banner_image') ? 'is-invalid' : null }}" name="banner_image" id="banner_image"
+                                       aria-describedby="banner_image">
+                                {!! Form::label('banner_image', $object->banner_image ?? 'Choose the banner image' , ['class' =>[ 'custom-file-label' ]]) !!}
+                            </div>
+                        </div>
+                        @if ($errors->has('banner_image'))
+                            <div class="invalid-feedback">
+                                {{$errors->first('banner_image')}}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="tags">Tags</label>
+                            <select name="tags[]" id="tags" multiple>
+                                @foreach ($tags as $tag)
+                                    <option value="{{$tag->id}}"
+                                            @if (isset($object->tags) &&
+                                                \DB::table("post_tag")
+                                                    ->where(
+                                                        ['post_id' => $object->id,
+                                                         'tag_id' => $tag->id
+                                                        ])->exists()
+                                                )
+                                            selected
+                                            @endif>{{$tag->traduction->first()->pivot->name}}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                            <label>Default Opitons</label><br>
+                            <div class="custom-control custom-checkbox ">
+                                <input type="checkbox" @if(isset($object->highlighted) && $object->highlighted == 1) checked @endif name="highlighted" class="custom-control-input" id="highlighted">
+                                <label class="custom-control-label" for="highlighted">Highlighted (first page)</label>
+                            </div>
+                            <div class="custom-control custom-checkbox ">
+                                <input type="checkbox" @if(!isset($object->status)) checked @endif @if(isset($object->status) && $object->status == 1) checked @endif name="status" class="custom-control-input" id="status">
+                                <label class="custom-control-label"  for="status">Status (Active or not)</label>
+                            </div>
+                        </div>
                     <div class="form-group float-right">
                         <a href="{{route('tag.index')}}" class="btn btn-sm btn-outline-info">Go Back</a>
                         {!! Form::submit('Submit', ['class' => 'btn btn-sm btn-outline-success']) !!}
