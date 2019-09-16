@@ -10729,6 +10729,11 @@ p {
   left: 0.75rem;
 }
 
+.nav-tabs li .active {
+  color: white !important;
+  background: #6c757d !important;
+}
+
 @media only screen and (max-width: 991.98px) {
   .navbar {
     height: 75px !important;

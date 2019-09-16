@@ -44,7 +44,7 @@
                     @foreach ($object_list as $object)
                         <tr>
                             <td scope="row">{{$object->id}}</td>
-                            <td>{{$object->subject}}</td>
+                            <td>{{$object->traduction->first()->pivot->subject}}</td>
                             <td>
                                 @can('edit post')
                                     <a href="{{route('post.edit', $object->id)}}" class="btn btn-sm btn-outline-warning">Edit</a>
