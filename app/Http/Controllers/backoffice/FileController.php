@@ -20,17 +20,6 @@ class FileController extends Controller
         $files = File::all();
         return view('backoffice.files.index', compact('files'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -66,16 +55,7 @@ class FileController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function show(File $file)
-    {
-        //
-    }
+
 
     public function getAllFilesJson()
     {
@@ -90,7 +70,7 @@ class FileController extends Controller
      */
     public function edit(File $file)
     {
-        //
+        return view('backoffice.files.create_edt', compact('file'));
     }
 
     /**
@@ -102,7 +82,15 @@ class FileController extends Controller
      */
     public function update(Request $request, File $file)
     {
-        //
+        $request->validate([
+            "name" => "required|min:3|max:50",
+        ]);
+        $file->update([
+            "name" => $request->name
+        ]);
+
+        $request->session()->flash('status-success', "The file {$file->name} was successfully updated.");
+        return redirect()->route('file.edit', $file->id);
     }
 
     /**
