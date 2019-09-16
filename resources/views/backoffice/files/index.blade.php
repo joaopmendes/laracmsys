@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
 @endsection
 @section('js')
+
     <script src="{{ asset('js/dropzone.js') }}"></script>
     <script>
         window.getAllFilesUrl = "{{ route("file.getAllFilesJson") }}";
