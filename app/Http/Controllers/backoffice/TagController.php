@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\backoffice;
 
+use App\Language;
 use App\Tag;
+use App\TagLang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -35,7 +37,9 @@ class TagController extends Controller
      */
     public function create()
     {
-        return view('backoffice.tags.create_edt');
+        $languages = Language::all();
+        $tabsAdjust = 100 / $languages->count();
+        return view('backoffice.tags.create_edt', compact('languages', 'tabsAdjust'));
     }
 
     /**
@@ -46,14 +50,16 @@ class TagController extends Controller
      */
     public function store(Request $req)
     {
-        $req->validate([
-            'name' => 'required|min:3|max:50|unique:tags'
-        ]);
 
-        $tag = Tag::create([
-            "name" => $req->input('name'),
-            "color" => $req->input('color')
-        ]);
+        $this->validation($req);
+        $tag = new Tag();
+        $req->input('color') ? $tag->color = $req->input('color') : '';
+        $tag->save();
+        $languages = Language::all();
+        foreach ($languages as $lang) {
+            $tag_lang = new TagLang();
+            $this->defaultLanguageCamps($req, $tag, $tag_lang, $lang);
+        }
 
         $req->session()->flash('status-success', "The tag {$tag->name} was successfully created.");
         return redirect()->route('tag.edit', $tag->id);
@@ -70,7 +76,9 @@ class TagController extends Controller
     public function edit($id)
     {
         $tag = Tag::findOrFail($id);
-        return view('backoffice.tags.create_edt', compact('tag'));
+        $languages = Language::all();
+        $tabsAdjust = 100 / $languages->count();
+        return view('backoffice.tags.create_edt', compact('tag', 'languages', 'tabsAdjust'));
     }
 
     /**
@@ -82,16 +90,18 @@ class TagController extends Controller
      */
     public function update(Request $req, $id)
     {
-        $req->validate([
-            'name' => 'required|min:3|max:50'
-        ]);
+        $this->validation($req);
         $tag = Tag::findOrFail($id);
         $tag->update(
             [
-                "name" => $req->input('name'),
                 "color" => $req->input('color')
             ]
         );
+        $languages = Language::all();
+        foreach ($languages as $lang) {
+            $tag_lang = TagLang::firstOrCreate(['tag_id' => $tag->id, 'language_id' => $lang->id]);
+            $this->defaultLanguageCamps($req, $tag, $tag_lang, $lang);
+        }
         $req->session()->flash('status-success', "The tag {$tag->name} was successfully updated.");
         return redirect()->route('tag.edit', $tag->id);
     }
@@ -113,5 +123,29 @@ class TagController extends Controller
             $req->session()->flash('status-danger', "The tag {$tag->name} was unsuccessfully deleted.");
         }
         return redirect()->route('tag.index');
+    }
+
+    public function defaultLanguageCamps(Request $request, $object, $object_lang, $lang){
+        $object_lang->language_id = $lang->id;
+        $object_lang->tag_id = $object->id;
+
+        $object_lang->name = $request->input("name_{$lang->slug}") ?: null;
+        $object_lang->save();
+
+    }
+
+    public function validation($req)
+    {
+        $languages_to_validate = Language::where('STATUS', 1)->get();
+        // This is needed to validate multiple languages camps
+        $array_of_name_langs_to_validate = [];
+        foreach ($languages_to_validate as $lang) {
+            $array_of_name_langs_to_validate += ["name_{$lang->slug}" => 'required|min:3|max:50'];
+        }
+
+        $defaultRules = [];
+        $req->validate(
+            array_merge($defaultRules, $array_of_name_langs_to_validate),
+        );
     }
 }
