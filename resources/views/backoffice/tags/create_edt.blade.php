@@ -53,8 +53,8 @@
                      --}}
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         @foreach ($languages as $i => $language)
-                            <li class="nav-item" style="width:{{$tabsAdjust}}%;">
-                                <a class="nav-link @if ($i == 0) active @endif" id="{{$language->slug}}"
+                            <li class="nav-item " style="width:{{$tabsAdjust}}%;">
+                                <a class="nav-link font-weight-bolder @if ($i == 0) active @endif" id="{{$language->slug}}"
                                    style="color:black;" data-toggle="tab" href="#section-{{$language->slug}}" role="tab"
                                    aria-controls="{{$language->slug}}"
                                    aria-selected="@if ($i == 0) true @else false @endif">{{$language->name}}</a>
@@ -68,7 +68,7 @@
                                 <div class="form-group">
                                     {!! Form::label('name_' . $language->slug ,'Name ' . $language->slug ,['class' => 'control-label']) !!}
                                     {!! Form::text('name_' . $language->slug,
-                                            old('name_' . $language->slug, isset($tag)?$tag->traduction->where("id", $language->id)->first()->pivot->name ?? null:null),
+                                            old('name_' . $language->slug, isset($tag) ? $tag->traduction->where("id", $language->id)->first()->pivot->name ?? null:null),
                                             ['class' =>[
                                                 'form-control',
                                                 $errors->first('name_' . $language->slug) ? 'is-invalid' : ''
