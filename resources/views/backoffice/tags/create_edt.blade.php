@@ -68,7 +68,7 @@
                                 <div class="form-group">
                                     {!! Form::label('name_' . $language->slug ,'Name ' . $language->slug ,['class' => 'control-label']) !!}
                                     {!! Form::text('name_' . $language->slug,
-                                            old('name_' . $language->slug, $tag->traduction->where("id", $language->id)->first()->pivot->name ?? null),
+                                            old('name_' . $language->slug, isset($tag)?$tag->traduction->where("id", $language->id)->first()->pivot->name ?? null:null),
                                             ['class' =>[
                                                 'form-control',
                                                 $errors->first('name_' . $language->slug) ? 'is-invalid' : ''
