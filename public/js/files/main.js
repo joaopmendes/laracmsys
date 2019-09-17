@@ -4,9 +4,14 @@ $(window).on("load", () => {
     function getImagesData() {
         // First off all clear the container
         $("#image-container-grid").html("");
-        const rowTemplate = `<div class="grid-item shadow-lg position-relative" id="%id%" >
+        const rowTemplate = `<div class="grid-item shadow-lg position-relative rounded cursored" id="%id%" >
                                 <a href="%edit_route%">
-                                    <img src="%img_src%" class="img-fluid">
+                                    <div class="view overlay zoom">
+                                        <img src="%img_src%" class="img-fluid rounded-lg cursored">
+                                        <div class="mask flex-center rgba-black-light rounded-lg cursored">
+                                            <p class="white-text cursored"><b>Click to edit</b></p>
+                                        </div>
+                                    </div>
                                     <div class="group-buttons">
                                         <a class="btn custom-btn btn-info clipboard" data-toggle="tooltip" data-url="%img_src%" data-placement="right" title="Copy url to the clipboard">
                                             <i class="far fa-clipboard"></i>
@@ -15,7 +20,7 @@ $(window).on("load", () => {
                                             <span class="waves-input-wrapper waves-effect waves-light"><input class="btn custom-btn btn-danger" type="submit" value="X" data-toggle="tooltip" data-placement="right" title="Delete the image"></span>
                                         </form>
                                     </div>
-                                </a>
+                                </div></a>
                              </div>`;
         $.getJSON(window.getAllFilesUrl)
             .then((data) => {
@@ -34,7 +39,11 @@ $(window).on("load", () => {
                 $(".clipboard").on('click', function (event) {
                     event.preventDefault();
                     navigator.clipboard.writeText($(event.target).data('url')).then(r => {
-                        alert('Link Copied.')
+                        $('#clipboard_modal').modal('show')
+                        setTimeout(() => {
+                            $('#clipboard_modal').modal('hide');
+
+                        }, 1500);
                     });
                 });
             })
