@@ -45,11 +45,9 @@ class LanguageController extends Controller
             'slug' => 'required|min:2|max:20',
             'name' => 'required|min:3|max:50'
         ]);
-        $lang = Language::create($request->all());
-        if(!$lang) {
-            $request->session()->flash('status-error', "The language {$lang->name} couldn't be created.");
-            return back();
-        }
+        $lang = Language::create($request->only('slug', 'name'));
+        $lang->status = $request->status === 'on' ? 1 : 0;
+        $lang->save();
         $request->session()->flash('status-success', "The language {$lang->name} was successfully created.");
         return redirect()->route('language.edit', $lang->id);
     }
@@ -74,7 +72,15 @@ class LanguageController extends Controller
      */
     public function update(Request $request, Language $language)
     {
-        //
+        $request->validate([
+            'slug' => 'required|min:2|max:20',
+            'name' => 'required|min:3|max:50'
+        ]);
+        $language->update($request->only('slug', 'name'));
+        $language->status = $request->status === 'on' ? 1 : 0;
+        $language->save();
+        $request->session()->flash('status-success', "The language {$language->name} was successfully updated.");
+        return redirect()->route('language.edit', $language->id);
     }
 
     /**
