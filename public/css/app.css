@@ -1,13 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700&display=swap);@charset "UTF-8";
 
+.cursored {
+  cursor: pointer !important;
+}
+
 .image-container-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
   width: 100%;
-  border: 3px dotted #4285f4;
   padding: 1em;
-  cursor: pointer;
 }
 
 .image-container-grid .grid-item,

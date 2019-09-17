@@ -1,12 +1,12 @@
 @extends('backoffice.layout.base')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/basic.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dropzone/basic.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dropzone/dropzone.css') }}">
 @endsection
 @section('js')
 
-    <script src="{{ asset('js/dropzone.js') }}"></script>
+    <script src="{{ asset('js/files/dropzone/dropzone.js') }}"></script>
     <script>
         window.getAllFilesUrl = "{{ route("file.getAllFilesJson") }}";
     </script>
@@ -53,11 +53,7 @@
         <div class="modal fade right" id="clipboard_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true" data-backdrop='false'>
             <div class="modal-dialog modal-sm modal-side modal-top-right" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+
                     <div class="modal-body">
                         Image path copied to clipboard
                     </div>
