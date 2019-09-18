@@ -3,56 +3,6 @@
 
 // Variables
 @import 'variables';
-@import 'files';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700&display=swap');
-
-
-h1, h2, h3, h4, h5, h6, p {
-    font-family: 'Roboto Slab', serif;
-}
-
-.app-body {
-    margin-top:75px !important;
-}
-.img-avatar {
-    height: 35px !important;
-    width: 35px !important;
-}
-.navbar {
-    height: 75px !important;
-    img {
-        height: 100%;
-        width: 100%;
-    }
-}
-
-
-.custom-control-input:checked~.custom-control-label::before{
-    background-color: #36b9cc;
-    border-color: #36b9cc;
-}
-
-.custom-file-label{
-    right: .75rem;
-    left: .75rem;
-}
-
-.nav-tabs li .active {
-    color: white !important;
-    background: #6c757d!important;
-}
-@media only screen and (max-width: 991.98px) {
-    .navbar {
-        height: 75px !important;
-        img {
-            height: 70%;
-            width: 100%;
-        }
-    }
-    .app-body {
-        margin-top:0 !important;
-    }
-}

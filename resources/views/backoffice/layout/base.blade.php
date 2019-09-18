@@ -38,7 +38,6 @@
         #sidebar{
             font-size: 13px;
         }
-
     </style>
 </head>
 
@@ -187,6 +186,27 @@
                                 </ul>
                             </li>
                         @endcanany
+                        <li class="nav-title">Content Management</li>
+                        @canany(['add article', 'edit article'])
+                            <li class="nav-item nav-dropdown">
+                                <a class="nav-link nav-dropdown-toggle" href="#">
+                                    <i class="nav-icon icon-puzzle"></i> Article</a>
+                                <ul class="nav-dropdown-items">
+                                    @can('add article')
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{route('article.create')}}">
+                                                <i class="nav-icon icon-puzzle"></i> Create Article</a>
+                                        </li>
+                                    @endcan
+                                    @can("list article")
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{route('article.index')}}">
+                                                <i class="nav-icon icon-puzzle"></i> List Articles</a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcanany
                             <li class="nav-title">Others</li>
                             @canany(['add file', 'edit file'])
                                 <li class="nav-item">
@@ -194,6 +214,8 @@
                                         <i class="nav-icon icon-puzzle"></i> Multimedia</a>
                                 </li>
                             @endcanany
+
+
                         @canany(['add language', 'edit language'])
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#">

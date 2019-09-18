@@ -98,7 +98,8 @@
                                 </div>
                                 <div class="form-group">
                                     {!! Form::label("body_{$language->slug}","Post Body {$language->slug}",['class' => 'control-label mt-3 ']) !!}
-                                    <textarea id="editor_{{$language->slug}}" name="{{"body_{$language->slug}"}}" class="is-invalid" contenteditable="true"
+                                    <div class="rounded p-3" style="border: 1px solid #ced4da">
+                                    <textarea id="editor_{{$language->slug}}" name="{{"body_{$language->slug}"}}" class="form-control @if($errors->has("body_{$language->slug}")) is-invalid @endif" contenteditable="true"
                                               style="border: 1px solid #4b565b; padding: 10px">
                                                 @if (old("body_{$language->slug}"))
                                                     {{old("body_{$language->slug}")}}
@@ -233,14 +234,19 @@
 </div>
                                                     @endif
                                                 @endif
-                                              </textarea>
+                                    </textarea></div>
+                                    @if ($errors->has("body_{$language->slug}"))
+                                        <div class="invalid-feedback">
+                                            {{$errors->first("body_{$language->slug}")}}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
                     </div>
                     {{----------------------------}}
 
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <label for="banner_image">Banner Image</label>
                         <div class="input-group ">
                             <div class="input-group-prepend">
@@ -287,9 +293,9 @@
                                 <input type="checkbox" @if(!isset($object->status)) checked @endif @if(isset($object->status) && $object->status == 1) checked @endif name="status" class="custom-control-input" id="status">
                                 <label class="custom-control-label"  for="status">Status (Active or not)</label>
                             </div>
-                        </div>
+                    </div>
                     <div class="form-group float-right">
-                        <a href="{{route('tag.index')}}" class="btn btn-sm btn-outline-info">Go Back</a>
+                        <a href="{{route('post.index')}}" class="btn btn-sm btn-outline-info">Go Back</a>
                         {!! Form::submit('Submit', ['class' => 'btn btn-sm btn-outline-success']) !!}
                     </div>
 
