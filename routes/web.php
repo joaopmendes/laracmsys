@@ -25,6 +25,7 @@ Route::group(['prefix' => 'backoffice', 'middleware' => ['auth', 'checkIfUserHas
     Route::resource('post', 'backoffice\PostController');
     Route::resource('file', 'backoffice\FileController');
     Route::resource('language', 'backoffice\LanguageController');
+    Route::resource('article', 'backoffice\ArticleController');
 
 
 
@@ -38,5 +39,8 @@ Route::group(['prefix' => 'backoffice', 'middleware' => ['auth', 'checkIfUserHas
 
     })->name('status.update');
 });
+Auth::routes();
+
+
 Auth::routes();
 
