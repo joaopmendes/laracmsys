@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLanguagePostTable extends Migration
+class CreateLanguageArticleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,21 @@ class CreateLanguagePostTable extends Migration
      */
     public function up()
     {
-        Schema::create('language_post', function (Blueprint $table) {
+        Schema::create('language_article', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('language_id')->unsigned();
-            $table->bigInteger('post_id')->unsigned();
-            $table->string('subject')->nullable();
-            $table->longText('body')->nullable();
+            $table->bigInteger('article_id')->unsigned();
+            $table->string('name')->nullable();
+            $table->string('body')->nullable();
+
 
             $table->foreign('language_id')
                 ->references('id')
                 ->on('languages')
                 ->onDelete('cascade');
-            $table->foreign('post_id')
+            $table->foreign('article_id')
                 ->references('id')
-                ->on('posts')
+                ->on('articles')
                 ->onDelete('cascade');
 
             $table->timestamps();
@@ -40,6 +41,6 @@ class CreateLanguagePostTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('languages');
+        Schema::dropIfExists('language_tag');
     }
 }

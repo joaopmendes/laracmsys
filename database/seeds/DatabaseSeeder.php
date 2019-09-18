@@ -55,11 +55,16 @@ class DatabaseSeeder extends Seeder
             'destroy file',
             'edit file',
 
+            'add article',
+            'list article',
+            'destroy article',
+            'edit article',
+
             'add language',
             'list language',
             'destroy language',
             'edit language',
-            'edit_st    atus language',
+            'edit_status language',
         ];
         foreach ($permissions as $permission) {
             Permission::create([
